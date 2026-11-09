@@ -1,0 +1,1289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>Growth Audit — DuoCards</title>
+<link rel="icon" href="img/mammoth.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  /* ---- DuoCards, extracted from their live screens ---- */
+  --dc-bg:#F2F8FF; --dc-card:#FFFFFF; --dc-line:#DCE8F4; --dc-line2:#C7DDF1;
+  --dc-blue:#008ED9; --dc-blue2:#05A6EC; --dc-sel:#0A93D9; --dc-prog:#6CB2FF; --dc-cell:#5DADF6;
+  --dc-ring:#A9D6F5; --dc-soft:#E3F1FC;
+  --dc-green:#2FA84F; --dc-green2:#22A45D; --dc-green-bg:#E3F6E7;
+  --dc-ink:#262626; --dc-txt:#4E5157; --dc-muted:#8C9097; --dc-star:#F28A1E;
+  --dc-off:#9ACDF0;
+  --r-ctl:26px; --r-media:22px;
+  /* ---- the report shell, in DuoCards' own palette ---- */
+  --bg:#F2F8FF; --bg2:#FFFFFF; --surf:#FFFFFF;
+  --hair:rgba(30,52,77,.10); --hair2:rgba(30,52,77,.18);
+  --ink:#1B2836; --ink2:#46515E; --ink3:#828C97;
+  --accent:#008ED9; --accent-lift:#0074B4;
+  --panel:#FFFFFF; --panel-ink:#15191E; --panel-muted:#5F666D; --panel-line:#E6ECF2;
+  --accent-ink:#006AA6;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+/* ============ top bar ============ */
+.nav{position:sticky;top:0;z-index:70;background:rgba(242,248,255,.86);backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--hair)}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:18px}
+@media(max-width:700px){.nav-in{padding:0 16px;gap:12px}}
+.nav-brand{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.nav-brand img{width:27px;height:27px;display:block;flex:none}
+.nav-brand span{color:var(--ink2);font-weight:500}
+.nav-brand b{color:var(--ink);font-weight:600}
+.nav-links{margin-left:auto;display:flex;gap:2px;align-items:center}
+.nav-links button{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink3);transition:.16s}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{color:var(--ink);background:#fff;box-shadow:0 1px 4px rgba(30,52,77,.08)}
+@media(max-width:640px){.nav-brand span{display:none}}
+
+.view{display:none}
+.view.on{display:block}
+
+/* ============ hero ============ */
+.hero{padding:104px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);
+  width:1100px;height:640px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(0,142,217,.17),transparent 72%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(40% 50% at 8% 22%,rgba(34,164,93,.14),transparent 70%),
+   radial-gradient(36% 45% at 92% 18%,rgba(255,164,79,.16),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-lift);margin-bottom:26px}
+.hero h1{font-size:76px;line-height:.98;font-weight:700;letter-spacing:-.045em;margin:0 0 24px}
+@media(max-width:820px){.hero h1{font-size:50px}.hero{padding-top:70px}}
+.hero .lede{font-size:20px;line-height:1.5;font-weight:400;color:var(--ink2);max-width:600px;margin:0 auto;letter-spacing:-.012em}
+@media(max-width:820px){.hero .lede{font-size:17px}}
+.hero .meta{margin-top:30px;font-size:12.5px;color:var(--ink3);letter-spacing:.02em}
+.hero .meta b{color:var(--ink2);font-weight:600}
+
+.stats{display:flex;justify-content:center;gap:0;margin:70px auto 0;max-width:760px;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.stat{flex:1;padding:26px 14px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:none}
+.stat b{display:block;font-size:26px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.stat span{display:block;font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.35}
+@media(max-width:700px){.stat b{font-size:19px}.stat{padding:18px 8px}}
+
+.fb{max-width:760px;margin:0 auto;padding:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;text-align:left}
+@media(max-width:700px){.fb{grid-template-columns:1fr;gap:20px;padding-top:24px}}
+.fb-k{grid-column:1/-1;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);text-align:center;margin-bottom:-6px}
+.fb-i{display:flex;gap:12px;align-items:flex-start}
+.fb-i .tick{width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:rgba(0,142,217,.14);
+  display:grid;place-items:center}
+.fb-i .tick svg{width:10px;height:10px;stroke:var(--accent-lift);stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.fb-i p{font-size:14px;line-height:1.55;color:var(--ink2);margin:0}
+.fb-i p b{color:var(--ink);font-weight:700}
+
+.sec{padding:96px 0}
+.sec-k{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.sec h2{font-size:38px;line-height:1.14;font-weight:700;letter-spacing:-.035em;margin:0 0 20px;max-width:680px}
+@media(max-width:820px){.sec h2{font-size:29px}.sec{padding:64px 0}}
+.sec p.body{font-size:17px;line-height:1.66;color:var(--ink2);max-width:640px;margin:0 0 18px;letter-spacing:-.008em}
+.sec p.body b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--hair);margin:0}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;max-width:820px}
+@media(max-width:760px){.notes{grid-template-columns:1fr}}
+.note{background:var(--surf);border:1px solid var(--hair);box-shadow:0 2px 10px rgba(30,52,77,.04);border-radius:16px;padding:24px 26px}
+.note h4{font-size:15px;font-weight:700;letter-spacing:-.015em;margin:0 0 8px}
+.note p{font-size:14px;line-height:1.6;color:var(--ink2);margin:0}
+
+.ideas{display:flex;flex-direction:column;gap:0;margin-top:14px;border-top:1px solid var(--hair)}
+.idea{display:grid;grid-template-columns:52px 1fr 180px;gap:26px;align-items:start;
+  padding:30px 4px;border-bottom:1px solid var(--hair);text-align:left;width:100%;transition:.18s}
+.idea:hover{background:rgba(255,255,255,.7)}
+@media(max-width:780px){.idea{grid-template-columns:38px 1fr;gap:16px}}
+.idea .no{font-size:13px;font-weight:700;color:var(--ink3);padding-top:4px;letter-spacing:.02em}
+.idea h3{font-size:21px;line-height:1.25;font-weight:700;letter-spacing:-.024em;margin:0 0 7px}
+@media(max-width:820px){.idea h3{font-size:18px}}
+.idea p{font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:540px}
+.idea .out{text-align:right;padding-top:3px}
+@media(max-width:780px){.idea .out{grid-column:2;text-align:left;padding-top:12px}}
+.idea .out b{display:block;font-size:19px;font-weight:700;letter-spacing:-.025em;color:var(--accent-lift);white-space:nowrap}
+.idea .out span{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.idea .seeit{display:inline-flex;align-items:center;gap:5px;margin-top:11px;font-size:12.5px;
+  font-weight:600;color:var(--accent-lift)}
+.idea .seeit svg{width:12px;height:12px}
+
+.band{background:var(--surf);border:1px solid var(--hair);border-radius:28px;box-shadow:0 2px 10px rgba(30,52,77,.04);padding:40px 44px;margin-top:44px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+@media(max-width:700px){.band{padding:28px 24px;gap:22px}}
+.band .lab{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.band .txt{flex:1;min-width:240px}
+.band .txt p{font-size:15.5px;line-height:1.6;color:var(--ink2);margin:0}
+.band .nums{display:flex;gap:34px}
+.band .nums div b{display:block;font-size:30px;font-weight:700;letter-spacing:-.035em;color:var(--accent-lift)}
+.band .nums div span{display:block;font-size:11px;color:var(--ink3);margin-top:2px;letter-spacing:.04em;
+  text-transform:uppercase;font-weight:600}
+
+.cta-row{display:flex;justify-content:center;margin-top:52px;align-items:center;gap:22px;flex-wrap:wrap}
+.bigbtn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;
+  font-size:15px;font-weight:700;letter-spacing:-.01em;padding:15px 26px;border-radius:30px;transition:.16s}
+.bigbtn:hover{filter:brightness(1.1)}
+.bigbtn svg{width:15px;height:15px}
+
+.foot{border-top:1px solid var(--hair);padding:36px 0 70px;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+/* ============ prototype stage ============ */
+.stage{display:grid;grid-template-columns:minmax(440px,1fr) minmax(400px,470px);gap:0;
+  align-items:start;min-height:calc(100vh - 58px)}
+@media(max-width:1080px){.stage{grid-template-columns:1fr}}
+.phonecol{padding:34px 24px 46px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.panelcol{border-left:1px solid var(--hair);background:var(--panel);color:var(--panel-ink);
+  min-height:calc(100vh - 58px);position:sticky;top:58px;max-height:calc(100vh - 58px);overflow-y:auto}
+@media(max-width:1080px){.panelcol{position:static;max-height:none;border-left:none;border-top:1px solid var(--hair)}}
+
+.phone{position:relative;width:390px;height:844px;flex:none;background:#000;border:11px solid #000;
+  border-radius:46px;box-shadow:0 0 0 1.5px #CFDCE8,0 34px 70px -22px rgba(30,52,77,.38)}
+.phone-in{position:absolute;inset:0;border-radius:36px;overflow:hidden;background:var(--dc-bg);color-scheme:only light}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:30px;background:#000;
+  border-radius:16px;z-index:60;pointer-events:none}
+.sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:55;pointer-events:none;display:flex;
+  align-items:center;justify-content:space-between;padding:14px 28px 0 34px;font:700 15px/1 'Roboto',sans-serif;color:#111;transition:color .3s}
+.sbar.light{color:#fff}
+.sbar .glyphs{display:flex;gap:5px;align-items:center}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;
+  border-radius:3px;background:#111;z-index:56;pointer-events:none;transition:background .3s}
+.homebar.light{background:rgba(255,255,255,.9)}
+.screenwrap{position:absolute;inset:0;overflow:hidden;background:var(--dc-bg)}
+
+/* ============ phone screens — DuoCards' system, all prefixed scr-/dc- ============ */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--dc-bg);color:var(--dc-ink);
+  font-family:'Roboto',-apple-system,sans-serif;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.32,.72,0,1);z-index:10;will-change:transform}
+.scr.is-active{transform:translateX(0);z-index:20}
+.scr.is-past{transform:translateX(-24%)}
+.scr.sheet{transform:translateY(100%)}
+.scr.sheet.is-active{transform:translateY(0);z-index:30}
+.scr.nofx{transition:none}
+.scr-top{flex:none;padding:58px 20px 0;position:relative;z-index:2}
+.scr-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 20px;scrollbar-width:none;position:relative;z-index:2}
+.scr-body::-webkit-scrollbar{display:none}
+.scr-body.dock{display:flex;flex-direction:column}
+.scr-foot{flex:none;padding:12px 24px 30px;position:relative;z-index:2}
+
+.dc-prog{height:14px;border-radius:7px;border:1.5px solid var(--dc-prog);background:#fff;overflow:hidden}
+.dc-prog i{display:block;height:100%;background:var(--dc-prog);transition:width .4s cubic-bezier(.32,.72,0,1)}
+.dc-ask{display:flex;align-items:flex-start;gap:12px;margin-top:22px}
+.dc-ask img{width:84px;height:auto;flex:none;margin-top:2px}
+.dc-bub{flex:1;background:var(--dc-card);border:1.5px solid var(--dc-line);border-radius:8px;padding:14px 16px;
+  font-size:15px;line-height:1.5;color:var(--dc-ink);box-shadow:0 2px 8px rgba(0,60,120,.04)}
+.dc-bub b{font-weight:700}
+.dc-btn{display:block;width:100%;height:58px;border-radius:29px;background:linear-gradient(90deg,var(--dc-blue),var(--dc-blue2));
+  color:#fff;font:400 16px/1 'Roboto',sans-serif;letter-spacing:.04em;text-transform:uppercase;
+  box-shadow:0 6px 14px -8px rgba(0,142,217,.8);transition:filter .15s}
+.dc-btn:hover{filter:brightness(1.05)}
+.dc-btn[disabled]{background:var(--dc-off);box-shadow:none;cursor:default}
+.dc-btn2{display:block;width:100%;height:46px;border-radius:23px;border:1.5px solid var(--dc-blue);background:#fff;
+  color:var(--dc-blue);font:400 13.5px/1 'Roboto',sans-serif;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+
+/* welcome */
+.scr--welcome{background:#fff}
+.dc-langpick{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;color:var(--dc-muted);margin-top:2px}
+.dc-langpick img{width:17px;height:12px;border-radius:2px;object-fit:cover}
+.dc-word{display:block;width:150px;margin:60px auto 0}
+.dc-hands{display:block;width:170px;margin:62px auto 0}
+.dc-tag{text-align:center;font-size:16px;color:var(--dc-ink);margin-top:14px}
+.dc-dots{display:flex;gap:16px;justify-content:center;margin:auto 0 18px;padding-top:24px}
+.dc-dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--dc-blue)}
+.dc-dots i.on{width:30px;border-radius:7px;background:var(--dc-blue)}
+
+/* language selects */
+.dc-field{margin-top:36px}
+.dc-field + .dc-field{margin-top:24px}
+.dc-flab{font-size:14px;font-weight:500;color:var(--dc-ink);margin:0 0 10px 8px}
+.dc-sel{position:relative;height:54px;border-radius:27px;background:var(--dc-card);border:1.5px solid var(--dc-ring);
+  display:flex;align-items:center;gap:10px;padding:0 20px;font-size:15px;color:var(--dc-ink)}
+.dc-sel img{width:20px;height:14px;border-radius:2px;object-fit:cover;flex:none}
+.dc-sel span{flex:1}
+.dc-sel svg{width:16px;height:16px;flex:none}
+.dc-sel select{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer;font-size:16px}
+
+/* option rows */
+.dc-rows{display:flex;flex-direction:column;gap:14px;margin-top:40px}
+.dc-row{display:flex;align-items:center;gap:14px;width:100%;min-height:56px;background:var(--dc-card);border:1.5px solid var(--dc-line);
+  border-radius:28px;padding:10px 20px;text-align:left;font:400 15px/1.3 'Roboto',sans-serif;color:var(--dc-ink);transition:.15s}
+.dc-row .l{flex:1}
+.dc-row .k{color:var(--dc-muted);font-size:14px}
+.dc-row.on{border-color:var(--dc-sel);color:var(--dc-sel)}
+.dc-bars{display:flex;align-items:flex-end;gap:2px;height:16px;flex:none}
+.dc-bars i{width:3px;border-radius:1px;background:#D3D7DC}
+.dc-bars i:nth-child(1){height:5px}.dc-bars i:nth-child(2){height:8px}.dc-bars i:nth-child(3){height:12px}.dc-bars i:nth-child(4){height:16px}
+.dc-bars i.f{background:#2E9A47}
+.dc-row .bell{width:20px;height:20px;flex:none;color:var(--dc-ink)}
+.dc-row.on .bell{color:var(--dc-sel)}
+.dc-row .t2 b{display:block;font-size:14px;font-weight:700}
+.dc-row .t2 small{display:block;font-size:11.5px;color:var(--dc-txt);margin-top:2px}
+.dc-row.on .t2 small{color:var(--dc-sel)}
+
+/* interests */
+.dc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:34px;padding-bottom:12px}
+.dc-tile{background:var(--dc-card);border:1.5px solid var(--dc-line);border-radius:12px;height:90px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;font:400 14.5px/1 'Roboto',sans-serif;color:var(--dc-ink);transition:.15s}
+.dc-tile img{width:40px;height:40px;display:block}
+.dc-tile.on{border-color:var(--dc-sel);color:var(--dc-sel)}
+
+/* where you stand — answers read back */
+.dc-standbub{position:relative;margin:30px auto 0;max-width:230px;background:var(--dc-card);border:1.5px solid var(--dc-line);border-radius:8px;
+  padding:13px 16px;text-align:center;font-size:15px;line-height:1.5;color:var(--dc-txt)}
+.dc-standbub b{color:var(--dc-ink)}
+.dc-standbub::after{content:'';position:absolute;right:34px;bottom:-11px;width:18px;height:18px;background:var(--dc-card);
+  border-right:1.5px solid var(--dc-line);border-bottom:1.5px solid var(--dc-line);transform:skewX(-30deg) rotate(45deg) scale(.7)}
+.dc-standm{display:block;width:120px;margin:22px auto 0}
+.dc-echo{background:var(--dc-card);border:1.5px solid var(--dc-line);border-radius:16px;padding:6px 16px;margin-top:22px}
+.dc-el{display:flex;align-items:center;gap:12px;padding:11px 0;font-size:14px;line-height:1.35;color:var(--dc-muted);transition:.35s}
+.dc-el + .dc-el{border-top:1px solid var(--dc-line)}
+.dc-el img{width:24px;height:24px;flex:none;opacity:.35;transition:.35s;object-fit:contain}
+.dc-el img.flag{width:22px;height:15px;border-radius:2px;object-fit:cover}
+.dc-el span{flex:1}
+.dc-el b{color:var(--dc-ink);font-weight:500;transition:.35s}
+.dc-el .c{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--dc-ring);display:grid;place-items:center;flex:none;transition:.35s}
+.dc-el .c svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none;opacity:0;stroke-linecap:round;stroke-linejoin:round}
+.dc-el.on{color:var(--dc-txt)}
+.dc-el.on img{opacity:1}
+.dc-el.on .c{background:var(--dc-green);border-color:var(--dc-green)}
+.dc-el.on .c svg{opacity:1}
+
+/* analysis card */
+.scr--ana{transition:transform .36s cubic-bezier(.32,.72,0,1),background .5s}
+.scr--ana.done{background:linear-gradient(180deg,#8FE0A0 0%,#C9F0D1 22%,var(--dc-bg) 52%)}
+.dc-acard{position:relative;background:var(--dc-card);border:1.5px solid var(--dc-line2);border-radius:var(--r-media);margin-top:44px;padding:42px 14px 14px;transition:border-color .4s}
+.dc-badge{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:60px;height:60px;border-radius:50%;background:#fff;
+  border:3px solid var(--dc-ring);display:grid;place-items:center;font:500 22px/1 'Roboto',sans-serif;color:var(--dc-blue);transition:.4s}
+.dc-lname{text-align:center;font:500 12.5px/1 'Roboto',sans-serif;letter-spacing:.06em;color:var(--dc-blue);text-transform:uppercase;transition:.4s}
+.dc-in5{display:none;margin:8px auto 0;width:max-content;max-width:100%;background:var(--dc-green);color:#fff;border-radius:12px;padding:5px 12px;
+  font:500 10.5px/1.2 'Roboto',sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.dc-cells{display:grid;grid-template-columns:repeat(7,1fr);background:#EEF0F2;border-radius:8px;overflow:hidden;margin-top:14px}
+.dc-cells i{font:500 10.5px/26px 'Roboto',sans-serif;text-align:center;color:var(--dc-txt);font-style:normal;transition:.4s}
+.dc-cells i.cur{background:var(--dc-cell);color:#fff}
+.dc-cells i.tgt{background:var(--dc-green);color:#fff}
+.dc-skill{display:flex;align-items:center;justify-content:space-between;padding:10px 0 9px;font:500 13.5px/1 'Roboto',sans-serif;color:var(--dc-ink)}
+.dc-skill + .dc-skill{border-top:1px solid #ECEFF2}
+.dc-skills{margin-top:8px}
+.dc-q{width:28px;height:28px;border-radius:50%;border:2px solid var(--dc-ring);display:grid;place-items:center;color:var(--dc-blue);font:700 13px/1 'Roboto',sans-serif;transition:.4s}
+.dc-q svg{width:14px;height:14px;stroke:var(--dc-green);stroke-width:2.6;fill:none;display:none;stroke-linecap:round;stroke-linejoin:round}
+.dc-tri{display:block;width:170px;margin:4px auto 0}
+.dc-tri text{font:400 9px 'Roboto',sans-serif;fill:var(--dc-txt)}
+.dc-tri .g{opacity:0;transition:opacity .5s}
+.scr--ana.done .dc-acard{border-color:#8CCB9B}
+.scr--ana.done .dc-badge{border-color:var(--dc-green);color:var(--dc-green)}
+.scr--ana.done .dc-lname{color:var(--dc-green)}
+.scr--ana.done .dc-in5{display:block}
+.scr--ana.done .dc-q{border-color:var(--dc-green)}
+.scr--ana.done .dc-q span{display:none}
+.scr--ana.done .dc-q svg{display:block}
+.scr--ana.done .dc-tri .g{opacity:1}
+.dc-mic{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--dc-card);border:1.5px dashed var(--dc-ring);border-radius:16px;padding:10px 14px;
+  font-size:12.5px;line-height:1.4;color:var(--dc-txt)}
+.dc-mic svg{width:18px;height:18px;flex:none;stroke:var(--dc-blue);stroke-width:2;fill:none}
+.dc-mic b{color:var(--dc-ink);font-weight:500}
+
+/* custom plan */
+.dc-chart{background:var(--dc-card);border:1.5px solid var(--dc-line);border-radius:var(--r-media);margin-top:20px;padding:12px 10px 10px;text-align:center}
+.dc-chart .dc-in5{display:block;margin:0 auto 6px}
+.dc-chart svg{display:block;width:100%;height:auto}
+.dc-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-bottom:6px}
+.dc-pt{background:var(--dc-card);border:1.5px solid var(--dc-line);border-radius:10px;padding:9px 10px;display:flex;align-items:center;gap:9px;min-width:0}
+.dc-pt img{width:30px;height:30px;flex:none;object-fit:contain}
+.dc-pt img.flag{width:28px;height:19px;border-radius:2px;object-fit:cover}
+.dc-pt div{min-width:0}
+.dc-pt b{display:block;font-size:13.5px;font-weight:700;color:var(--dc-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc-pt span{display:block;font-size:11.5px;color:var(--dc-muted)}
+
+/* paywall */
+.scr--pay{background:var(--dc-bg)}
+.dc-paybg{position:absolute;left:0;right:0;top:0;height:330px;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,#BFE4FB 0%,#DCF0FD 40%,rgba(242,248,255,0) 100%)}
+.scr--pay .scr-top{padding:48px 20px 0;text-align:center}
+.dc-x{position:absolute;right:20px;top:56px;width:34px;height:34px;display:grid;place-items:center;color:#9AA5B1;z-index:5}
+.dc-x svg{width:20px;height:20px}
+.dc-paym{width:52px;display:block;margin:0 auto}
+.dc-payh{text-wrap:balance;font:500 24px/1.16 'Roboto',sans-serif;letter-spacing:-.005em;color:var(--dc-ink);margin:8px 10px 0}
+.dc-pchip{display:inline-flex;align-items:center;gap:7px;margin-top:8px;background:#fff;border-radius:14px;padding:6px 12px;
+  box-shadow:0 2px 10px rgba(0,60,120,.08);font:500 11px/1.25 'Roboto',sans-serif;color:var(--dc-ink);text-align:left}
+.dc-pchip img{width:17px;height:12px;border-radius:2px;object-fit:cover;flex:none}
+.dc-curve{display:block;width:calc(100% + 40px);margin:4px -20px 0;height:auto}
+.dc-curve text{font-family:'Roboto',sans-serif}
+.dc-proof{display:flex;justify-content:center;gap:16px;margin-top:0}
+.dc-lau{display:flex;align-items:center;gap:4px}
+.dc-lau img{height:38px;width:auto;display:block}
+.dc-lau img.r{transform:scaleX(-1)}
+.dc-lau div{text-align:center;min-width:70px}
+.dc-lau b{display:block;font:700 18px/1.1 'Roboto',sans-serif;color:var(--dc-ink)}
+.dc-lau .st{color:var(--dc-star);font-size:13px;letter-spacing:1px;line-height:1.3}
+.dc-lau span{display:block;font-size:11px;color:var(--dc-txt);white-space:nowrap}
+.dc-quote{background:var(--dc-card);border:1.5px solid var(--dc-line2);border-radius:14px;margin-top:10px;padding:9px 14px;text-align:left}
+.dc-quote img{display:block;height:30px;width:auto}
+.dc-quote p{font:500 14.5px/1.32 'Roboto',sans-serif;color:var(--dc-ink);margin-top:7px}
+.dc-quote p em{font-style:normal;color:var(--dc-blue)}
+.dc-quote small{display:block;font-size:11px;color:var(--dc-muted);letter-spacing:.04em;margin-top:5px}
+.dc-cmp{background:var(--dc-card);border:1.5px solid var(--dc-line2);border-radius:14px;margin-top:10px;padding:9px 14px 2px;text-align:left}
+.dc-cmp h4{font:500 11.5px/1.2 'Roboto',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--dc-blue);margin:0}
+.dc-cr{display:grid;grid-template-columns:1fr 62px 78px;align-items:center;gap:6px;padding:5px 0;font-size:13px;color:var(--dc-ink)}
+.dc-cr + .dc-cr{border-top:1px solid #ECEFF2}
+.dc-cr.h{padding:2px 0 4px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dc-muted)}
+.dc-cr .f{text-align:center;color:var(--dc-muted)}
+.dc-cr .p{text-align:center;color:var(--dc-green);font-weight:700}
+.dc-cr.h .p{color:var(--dc-green)}
+.dc-cr .p svg{width:15px;height:15px;stroke:var(--dc-green);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.scr--pay .scr-foot{padding:6px 20px 24px;background:linear-gradient(180deg,rgba(242,248,255,0),var(--dc-bg) 14px)}
+.dc-plan{position:relative;display:flex;align-items:center;gap:12px;background:var(--dc-soft);border:1.5px solid var(--dc-sel);border-radius:14px;
+  padding:12px 14px 10px;margin-top:12px;text-align:left;width:100%}
+.dc-ptag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--dc-sel);color:#fff;border-radius:9px;
+  padding:3px 10px;font:500 9.5px/1 'Roboto',sans-serif;letter-spacing:.06em;white-space:nowrap;text-transform:uppercase}
+.dc-pck{width:22px;height:22px;border-radius:50%;background:var(--dc-sel);display:grid;place-items:center;flex:none}
+.dc-pck svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dc-plan .n{flex:1;font:500 16px/1 'Roboto',sans-serif;color:var(--dc-ink)}
+.dc-plan .pr{text-align:right}
+.dc-plan .pr b{display:block;font:700 15px/1.1 'Roboto',sans-serif;color:var(--dc-ink)}
+.dc-plan .pr span{display:block;font-size:11px;color:var(--dc-txt);margin-top:3px}
+.dc-terms{text-align:center;font-size:11px;color:var(--dc-txt);margin-top:9px}
+.scr--pay .dc-btn{margin-top:10px;height:46px;border-radius:23px;font-size:14px}
+
+/* offer on close */
+.scr--offer{background:var(--dc-bg)}
+.scr--offer .scr-top{text-align:center}
+.dc-oh{text-wrap:balance;font:500 26px/1.18 'Roboto',sans-serif;color:var(--dc-ink);margin:8px 8px 0}
+.dc-osub{font-size:14.5px;line-height:1.45;color:var(--dc-txt);margin:8px 12px 0}
+.dc-olab{font:500 12px/1.3 'Roboto',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--dc-blue);margin:22px 0 4px;text-align:center}
+.dc-ben{display:flex;align-items:center;gap:14px;padding:11px 0}
+.dc-ben img{width:50px;height:50px;border-radius:50%;flex:none;object-fit:cover}
+.dc-ben b{display:block;font-weight:400;font-size:15px;color:var(--dc-ink)}
+.dc-ben span{display:block;font-size:13px;line-height:1.4;color:var(--dc-muted);margin-top:2px}
+.dc-plan.q{background:var(--dc-card);margin-top:4px}
+.dc-plan .tbd{display:inline-block;border:1.5px dashed var(--dc-ring);border-radius:8px;padding:3px 8px;font:500 11.5px/1.2 'Roboto',sans-serif;color:var(--dc-blue)}
+.dc-nothanks{display:block;margin:10px auto 0;font-size:12.5px;color:var(--dc-muted)}
+
+/* dark mode — an approximation: no dark frames were supplied */
+.phone-in.dark{--dc-bg:#121417;--dc-card:#1D2126;--dc-line:#2D3238;--dc-line2:#363C43;--dc-ring:#2F5F82;--dc-soft:#13304A;
+  --dc-ink:#EEF1F4;--dc-txt:#A9B0B6;--dc-muted:#7D848B;--dc-off:#1F4A66;--dc-green-bg:#173A22;background:var(--dc-bg)}
+.phone-in.dark .screenwrap,.phone-in.dark .scr--welcome{background:var(--dc-bg)}
+.phone-in.dark .dc-prog,.phone-in.dark .dc-btn2{background:#1D2126}
+.phone-in.dark .dc-cells{background:#2A2F35}
+.phone-in.dark .dc-skill + .dc-skill,.phone-in.dark .dc-cr + .dc-cr{border-color:#2D3238}
+.phone-in.dark .dc-badge{background:#1D2126}
+.phone-in.dark .dc-bars i{background:#3A4047}
+.phone-in.dark .dc-bars i.f{background:#3FBF5E}
+.phone-in.dark .dc-paybg{background:linear-gradient(180deg,#0E3550 0%,#132B3E 40%,rgba(18,20,23,0) 100%)}
+.phone-in.dark .scr--pay .scr-foot{background:linear-gradient(180deg,rgba(18,20,23,0),var(--dc-bg) 14px)}
+.phone-in.dark .dc-pchip{background:#1D2126}
+.phone-in.dark .dc-lau img{filter:invert(1) hue-rotate(180deg) brightness(1.2)}
+.phone-in.dark .scr--ana.done{background:linear-gradient(180deg,#1B4D2A 0%,#16301F 22%,var(--dc-bg) 52%)}
+.phone-in.dark .dc-acard{border-color:#363C43}
+.phone-in.dark .scr--ana.done .dc-acard{border-color:#2E6B3E}
+.phone-in.dark .dc-tri .grid{stroke:#4A5159}
+.phone-in.dark .dc-curve .lbl{fill:#1D2126}
+.phone-in.dark .dc-chart .ar{opacity:.5}
+
+/* prototype toolbar, walkthrough, QR */
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.seg{display:inline-flex;align-items:center;background:#fff;border:1px solid #DCE6EF;border-radius:20px;padding:3px;gap:2px}
+.seg button{padding:6px 11px;border-radius:16px;font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--ink2);transition:.14s}
+.seg button.on{background:var(--ink);color:#fff}
+.demo-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:20px;background:var(--accent);color:#fff;
+  font:700 12px/1 'Plus Jakarta Sans',sans-serif}
+.demo-cap{width:390px;max-width:calc(100vw - 24px);background:#fff;border:1px solid var(--hair);border-radius:16px;padding:14px 14px 12px;
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(30,52,77,.07)}
+.demo-cap .bar{position:absolute;left:0;top:0;right:0;height:3px;background:#EAF1F7}
+.demo-cap .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
+.demo-cap p{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);margin:0;font-weight:500}
+.demo-cap button{font:700 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--ink2);padding:7px 10px;border-radius:12px;border:1px solid #DCE6EF;flex:none}
+.finger{position:absolute;z-index:90;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(27,40,54,.26);
+  border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;opacity:0;left:50%;top:60%;
+  transition:left .32s cubic-bezier(.4,0,.2,1),top .32s cubic-bezier(.4,0,.2,1),opacity .2s,transform .15s}
+.finger.show{opacity:1}
+.finger.press{transform:scale(.78);background:rgba(27,40,54,.4)}
+.qr{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:10px 16px 10px 10px;text-align:left}
+.qr img{width:123px;height:123px;display:block;image-rendering:pixelated;border-radius:6px}
+.qr span{font-size:12.5px;line-height:1.45;color:var(--ink2)}
+.qr b{display:block;color:var(--ink);font-size:13.5px}
+@media(max-width:1080px){.qr{display:none}}
+
+#view-proto .tools{order:0} #view-proto .demo-cap{order:1} #view-proto .phone{order:2} #view-proto .chips{order:3}
+#view-proto .chiphint{order:4} #view-proto .qr{order:5}
+.cta-row .qr{order:2}
+/* on a phone: the prototype is the screen */
+@media(max-width:500px){
+  #view-proto .phonecol{padding:0 0 28px;gap:14px}
+  #view-proto .phone{width:100vw;height:calc(100svh - 58px);min-height:640px;border:0;border-radius:0;box-shadow:none;order:1}
+  #view-proto .phone-in{border-radius:0}
+  #view-proto .island,#view-proto .sbar,#view-proto .homebar{display:none}
+  #view-proto .scr-top{padding-top:16px}
+  #view-proto .scr-foot{padding-bottom:18px}
+  #view-proto .scr--pay .scr-top{padding-top:14px}
+  #view-proto .dc-x{top:12px}
+  #view-proto .tools{order:3;padding:0 12px}
+  #view-proto .demo-cap{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-width:none;z-index:95}
+  #view-proto .chips{order:4;padding:0 12px}
+  #view-proto .chiphint{order:5}
+}
+
+.herobtns{display:flex;justify-content:center;margin-top:30px}
+.ghostbtn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--hair2);color:var(--ink);font-size:14px;
+  font-weight:700;padding:9px 20px 9px 9px;border-radius:30px;box-shadow:0 2px 12px rgba(30,52,77,.06);transition:.16s}
+.ghostbtn:hover{box-shadow:0 4px 18px rgba(30,52,77,.1)}
+.ghostbtn .pl{width:30px;height:30px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.ghostbtn .pl svg{width:12px;height:12px;fill:#fff;margin-left:2px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:470px;margin:0 auto}
+.chip{padding:7px 13px;border-radius:20px;border:1px solid #DCE6EF;background:#fff;
+  font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--ink2);transition:.14s}
+.chip:hover{color:var(--ink);border-color:#C3D2DF}
+.chip.offer{border-style:dashed;border-color:var(--accent);color:var(--accent-lift)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;border-style:solid}
+.chiphint{text-align:center;font-size:11px;color:var(--ink3);margin:0;max-width:430px}
+
+/* ============ the short panel ============ */
+.pn{padding:30px 30px 60px}
+.pn-n{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.pn-n.ctx{color:var(--panel-muted)}
+.pn-t{font-size:23px;line-height:1.18;font-weight:700;letter-spacing:-.028em;margin:8px 0 0;color:var(--panel-ink)}
+.pn-hyp{font-size:15px;line-height:1.62;color:#2E353B;margin:16px 0 0}
+.pn-hyp b{font-weight:700;color:var(--panel-ink)}
+.pn-out{margin-top:22px;border-top:1px solid var(--panel-line);padding-top:18px}
+.pn-out .lab{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--panel-muted)}
+.pn-out .v{font-size:31px;font-weight:700;letter-spacing:-.035em;color:var(--accent-ink);margin-top:7px;line-height:1}
+.pn-kept{margin-top:22px;font-size:12.5px;line-height:1.55;color:var(--panel-muted)}
+.pn-kept b{color:#2E353B;font-weight:700}
+.pn-foot{font-size:11.5px;line-height:1.55;color:var(--panel-muted);border-top:1px solid var(--panel-line);
+  padding-top:14px;margin-top:26px}
+.pn-sep{height:1px;background:var(--panel-line);margin:26px 0}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-in">
+    <div class="nav-brand">
+      <img src="img/mammoth.svg" alt="DuoCards">
+      <b>Growth Audit</b><span>· DuoCards</span>
+    </div>
+    <div class="nav-links">
+      <button class="on" data-view="over">Overview</button>
+      <button data-view="proto">Prototype</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= OVERVIEW ======================= -->
+<div class="view on" id="view-over">
+
+<div class="hero">
+  <div class="wrap">
+    <!-- month + year = the day you build, not this file --><div class="eyebrow">Growth Audit · November 2026</div>
+    <h1>DuoCards</h1>
+    <p class="lede">Five ideas to unlock more revenue from the traffic you already have.</p>
+    <div class="meta">Prepared by <b>Adapty</b> · based on your live iOS flow and your App Store listing</div>
+    <div class="herobtns"><button class="ghostbtn" data-demo><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span>Watch the 30-second walkthrough</button></div>
+    <div class="stats">
+      <div class="stat"><b>30,000+</b><span>apps run subscriptions<br>on Adapty</span></div>
+      <div class="stat"><b>5</b><span>ideas, each rebuilt<br>as a working screen</span></div>
+      <div class="stat"><b>0</b><span>design changes<br>to your art direction</span></div>
+    </div>
+
+    <div class="fb">
+      <div class="fb-k">Built in Adapty Flow Builder</div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Millions of dollars</b> in subscription revenue pass through Flow Builder every month.</p>
+      </div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Nearly 500 apps</b> actively build their paywalls and onboarding in it — plenty of them past $100K MRR.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">What this is</div>
+    <h2>We went through DuoCards the way a new learner does, then rebuilt the parts we think are leaving money on the table.</h2>
+    <p class="body">Adapty powers subscriptions for <b>30,000+ apps</b>, so we get to see what actually moves conversion and ARPU across the market rather than inside one app. We pointed that at DuoCards: installed it, walked the onboarding from the first question to the paywall and past its close button, read your App Store listing and your FAQ, and looked for gaps between what you already have and what you currently show people.</p>
+    <p class="body">Your flow is already strong — it asks good questions and turns them into a path from one level to the next. What follows is five ideas, not fifteen. Each one is a hypothesis you can A/B test, and each one is built into a clickable prototype so you can see it rather than imagine it. <b>The prototype uses your design, not ours.</b></p>
+
+    <div class="notes">
+      <div class="note">
+        <h4>We did not redesign your app</h4>
+        <p>Every screen in the prototype is yours — the mammoth and its speech bubbles, the outlined progress bar, your level bars, the interest tiles, the A0–C2 card and your blue pill buttons. Only the order changed, plus a few things you already own but do not show at the right moment.</p>
+      </div>
+      <div class="note">
+        <h4>You may have tested some of this</h4>
+        <p>We are working from the outside, so we cannot see your experiment history. If one of these is something you have already run, tell us — we will go deeper on the rest rather than repeat it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">The five ideas</div>
+    <h2>Ranked by what we would test first.</h2>
+    <p class="body">Each one links straight to the screen in the prototype.</p>
+
+    <div class="ideas">
+      <button class="idea" data-jump="offer">
+        <span class="no">01</span>
+        <span>
+          <h3>Catch the close with your 3-month plan</h3>
+          <p>Today the X on the 79,99 € paywall goes straight to “Your custom learning plan is ready”, with no second chance. You already sell a 3-month plan. Offer it there, with no trial and no yearly commitment, framed by your own “first three months” screen.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>ARPU +10–15%</b><span>second chance</span></span>
+      </button>
+
+      <button class="idea" data-jump="paywall">
+        <span class="no">02</span>
+        <span>
+          <h3>Show what Premium unlocks on the paywall</h3>
+          <p>The paywall shows the A1 → B1 curve, the rating and a price, but never says what the money buys. Your FAQ does: 20 new cards a day on free versus unlimited, two languages versus all of them, and offline learning.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–20%</b><span>to trial</span></span>
+      </button>
+
+      <button class="idea" data-jump="analysis">
+        <span class="no">03</span>
+        <span>
+          <h3>Move the speaking test past the paywall</h3>
+          <p>“Start free analysis” opens a voice chat with a microphone button before anyone has seen a price. Skip it and an “Are you sure?” sheet warns them, yet the result is the same A1 → B1 path. Show the path now and open the speaking check in the first lesson.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to trial</span></span>
+      </button>
+
+      <button class="idea" data-jump="stand">
+        <span class="no">04</span>
+        <span>
+          <h3>Read their answers back before the analysis</h3>
+          <p>“Great! Now let’s see where you stand…” follows six questions but repeats none of them. Tick off their language pair, level, interests and reminder choice on that screen, so the plan that follows feels built from what they said.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to trial</span></span>
+      </button>
+
+      <button class="idea" data-jump="paywall">
+        <span class="no">05</span>
+        <span>
+          <h3>Put Susan’s quote and the faces at the price</h3>
+          <p>Your strongest proof — “the first app that truly works for learning a language”, with a row of learners’ faces — sits on the sixth screen, long before the price. The paywall keeps the 4.7 and 6 million, and gains the quote right above the plan.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +5–10%</b><span>to trial</span></span>
+      </button>
+    </div>
+
+    <div class="band">
+      <div class="txt">
+        <div class="lab">Potential outcome</div>
+        <p>Run together, these five work the same funnel at three points — what people give before the price, what the paywall tells them, and what happens when they say no.</p>
+      </div>
+      <div class="nums">
+        <div><b>+30%</b><span>CR to trial</span></div>
+        <div><b>+15%</b><span>ARPU</span></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <div class="qr"><img src="img/qr.svg?v=1" alt="QR code for the prototype"><span><b>Or open it on your phone</b>Scan to try the flow in your hand.</span></div>
+      <button class="bigbtn" data-view="proto">Open the prototype
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="wrap">
+    Impact ranges are Adapty's expected effect from teardowns and A/B tests across subscription apps — not measured lift for DuoCards. Every price, rating, quote and feature line here and in the prototype comes from DuoCards' own App Store listing, website, FAQ and in-app screens.
+  </div>
+</div>
+</div><!-- /view-over -->
+
+<!-- ======================= PROTOTYPE ======================= -->
+<div class="view" id="view-proto">
+<div class="stage">
+  <div class="phonecol">
+    <div class="tools" id="tools">
+      <div class="seg" id="segLang"><button data-lang="en" class="on">EN</button><button data-lang="cs">CS</button><button data-lang="de">DE</button></div>
+      <div class="seg" id="segTheme"><button data-theme="light" class="on">Light</button><button data-theme="dark">Dark</button></div>
+      <button class="demo-btn" id="demoBtn"><svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>30-sec walkthrough</button>
+    </div>
+    <div class="phone">
+      <div class="phone-in" id="phoneIn">
+        <div class="island"></div>
+        <div class="sbar" id="sbar">
+          <span>15:18</span>
+          <span class="glyphs">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7.5" width="3" height="3.5" rx="1"/><rect x="4.5" y="5.5" width="3" height="5.5" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 10.5 5.6 7.9a3.4 3.4 0 0 1 4.8 0L8 10.5Zm0-5.6a6.4 6.4 0 0 0-4.5 1.9L1.7 4.9a9 9 0 0 1 12.6 0l-1.8 1.9A6.4 6.4 0 0 0 8 4.9Z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2.2" y="2.2" width="16.5" height="7.6" rx="1.8" fill="currentColor"/><path d="M22.3 4.1v3.8a2 2 0 0 0 0-3.8Z" fill="currentColor" fill-opacity=".5"/></svg>
+          </span>
+        </div>
+        <div class="homebar" id="homebar"></div>
+        <div class="finger" id="finger"></div>
+        <div class="screenwrap">
+
+<!-- WELCOME -->
+<section class="scr scr--welcome" data-id="welcome">
+  <div class="scr-top"><div class="dc-langpick"><img id="uiFlag" src="img/flag-en.svg" alt=""><span id="uiLang">English</span> <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></div></div>
+  <div class="scr-body dock">
+    <img class="dc-word" src="img/wordmark.svg" alt="DuoCards">
+    <img class="dc-hands" src="img/welcome-mammoth.png" alt="">
+    <p class="dc-tag" data-t="wel.tag"></p>
+    <div class="dc-dots"><i class="on"></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="scr-foot">
+    <button class="dc-btn2" data-t="wel.acc"></button>
+    <button class="dc-btn" data-go="langs" data-t="cont"></button>
+  </div>
+</section>
+
+<!-- LANGUAGES -->
+<section class="scr" data-id="langs">
+  <div class="scr-top">
+    <div class="dc-prog"><i style="width:14%"></i></div>
+    <div class="dc-ask"><img src="img/mammoth.svg" alt=""><div class="dc-bub" data-th="lang.q"></div></div>
+  </div>
+  <div class="scr-body">
+    <div class="dc-field"><p class="dc-flab" data-t="lang.learn"></p>
+      <div class="dc-sel"><img id="learnFlag" alt=""><span id="learnName"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg><select id="learnSel" aria-label="Language you want to learn"></select></div></div>
+    <div class="dc-field"><p class="dc-flab" data-t="lang.native"></p>
+      <div class="dc-sel"><img id="nativeFlag" alt=""><span id="nativeName"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg><select id="nativeSel" aria-label="Your native language"></select></div></div>
+  </div>
+  <div class="scr-foot"><button class="dc-btn" data-go="level" data-t="cont"></button></div>
+</section>
+
+<!-- LEVEL -->
+<section class="scr" data-id="level">
+  <div class="scr-top">
+    <div class="dc-prog"><i style="width:28%"></i></div>
+    <div class="dc-ask"><img src="img/mammoth.svg" alt=""><div class="dc-bub" id="levelQ"></div></div>
+  </div>
+  <div class="scr-body"><div class="dc-rows" id="levelList"></div></div>
+  <div class="scr-foot"><button class="dc-btn" data-go="pace" data-t="cont"></button></div>
+</section>
+
+<!-- PACE -->
+<section class="scr" data-id="pace">
+  <div class="scr-top">
+    <div class="dc-prog"><i style="width:42%"></i></div>
+    <div class="dc-ask"><img src="img/mammoth.svg" alt=""><div class="dc-bub" data-th="pace.q"></div></div>
+  </div>
+  <div class="scr-body"><div class="dc-rows" id="paceList" style="margin-top:30px"></div></div>
+  <div class="scr-foot"><button class="dc-btn" data-go="interests" data-t="cont"></button></div>
+</section>
+
+<!-- INTERESTS -->
+<section class="scr" data-id="interests">
+  <div class="scr-top">
+    <div class="dc-prog"><i style="width:57%"></i></div>
+    <div class="dc-ask"><img src="img/mammoth.svg" alt=""><div class="dc-bub" data-th="int.q"></div></div>
+  </div>
+  <div class="scr-body"><div class="dc-grid" id="intGrid"></div></div>
+  <div class="scr-foot"><button class="dc-btn" id="intBtn" data-go="stand" data-t="cont"></button></div>
+</section>
+
+<!-- WHERE YOU STAND — answers read back -->
+<section class="scr" data-id="stand">
+  <div class="scr-top">
+    <div class="dc-prog"><i style="width:71%"></i></div>
+  </div>
+  <div class="scr-body">
+    <div class="dc-standbub" data-th="st.bub"></div>
+    <img class="dc-standm" src="img/mammoth.svg" alt="">
+    <div class="dc-echo" id="echo">
+      <div class="dc-el"><img class="flag" id="ecFlag" alt=""><span id="ec0"></span><i class="c"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></i></div>
+      <div class="dc-el"><img src="img/t-materials.png" alt=""><span id="ec1"></span><i class="c"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></i></div>
+      <div class="dc-el"><img id="ecInt" alt=""><span id="ec2"></span><i class="c"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></i></div>
+      <div class="dc-el"><img src="img/t-phrases.png" alt=""><span id="ec3"></span><i class="c"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></i></div>
+    </div>
+    <div style="height:10px"></div>
+  </div>
+  <div class="scr-foot"><button class="dc-btn" data-go="analysis" data-t="cont"></button></div>
+</section>
+
+<!-- ANALYSIS -->
+<section class="scr scr--ana" data-id="analysis">
+  <div class="scr-top">
+    <div class="dc-ask" style="margin-top:4px"><img src="img/mammoth.svg" alt=""><div class="dc-bub" data-th="an.q"></div></div>
+  </div>
+  <div class="scr-body">
+    <div class="dc-acard">
+      <div class="dc-badge" id="anBadge">A1</div>
+      <div class="dc-lname" id="anName"></div>
+      <div class="dc-in5" data-t="in5"></div>
+      <div class="dc-cells" id="anCells"><i>A0</i><i>A1</i><i>A2</i><i>B1</i><i>B2</i><i>C1</i><i>C2</i></div>
+      <div class="dc-skills">
+        <div class="dc-skill"><span data-t="sk.p"></span><span class="dc-q"><span>?</span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+        <div class="dc-skill"><span data-t="sk.g"></span><span class="dc-q"><span>?</span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+        <div class="dc-skill"><span data-t="sk.v"></span><span class="dc-q"><span>?</span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+      </div>
+      <svg class="dc-tri" viewBox="0 0 170 128">
+        <text x="85" y="9" text-anchor="middle" data-t="sk.g"></text>
+        <g class="grid" fill="none" stroke="#C9D2DB" stroke-width="1">
+          <path d="M85 16 141 112H29Z"/><path d="M85 40 120 100H50Z"/><path d="M85 62 103 92H67Z"/>
+        </g>
+        <path class="g" d="M85 30 128 106H42Z" fill="rgba(47,168,79,.22)" stroke="#2FA84F" stroke-width="1.6"/>
+        <path d="M85 68 97 88H73Z" fill="rgba(93,173,246,.4)" stroke="#2E8FDB" stroke-width="1.4"/>
+        <text x="29" y="124" text-anchor="middle" data-t="sk.p"></text>
+        <text x="141" y="124" text-anchor="middle" data-t="sk.v"></text>
+      </svg>
+    </div>
+    <div class="dc-mic"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span data-th="an.mic"></span></div>
+    <div style="height:8px"></div>
+  </div>
+  <div class="scr-foot"><button class="dc-btn" id="anBtn"></button></div>
+</section>
+
+<!-- CUSTOM PLAN -->
+<section class="scr" data-id="plan">
+  <div class="scr-top">
+    <div class="dc-prog"><i style="width:92%"></i></div>
+    <div class="dc-ask"><img src="img/mammoth.svg" alt=""><div class="dc-bub" data-th="pl.q"></div></div>
+  </div>
+  <div class="scr-body">
+    <div class="dc-chart">
+      <div class="dc-in5" data-t="in5"></div>
+      <svg viewBox="0 0 330 170">
+        <defs>
+          <linearGradient id="arG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2FA84F" stop-opacity=".55"/><stop offset="1" stop-color="#2FA84F" stop-opacity=".06"/></linearGradient>
+          <linearGradient id="lnG" x1="0" x2="1"><stop offset="0" stop-color="#2E9BD8"/><stop offset=".45" stop-color="#3BB27A"/><stop offset="1" stop-color="#2FA84F"/></linearGradient>
+        </defs>
+        <path class="ar" d="M4 128 C40 122 70 124 90 118 S130 92 160 74 S200 52 230 48 S300 38 326 14 V162 H4Z" fill="url(#arG)"/>
+        <path d="M4 128 C40 122 70 124 90 118 S130 92 160 74 S200 52 230 48 S300 38 326 14" fill="none" stroke="url(#lnG)" stroke-width="3"/>
+        <line x1="62" y1="62" x2="62" y2="124" stroke="#9AA5B1" stroke-dasharray="3 3"/>
+        <circle cx="62" cy="58" r="3" fill="none" stroke="#9AA5B1"/>
+      </svg>
+    </div>
+    <div class="dc-tiles">
+      <div class="dc-pt"><img src="img/t-materials.png" alt=""><div><b>300+</b><span data-t="pl.mat"></span></div></div>
+      <div class="dc-pt"><img src="img/t-phrases.png" alt=""><div><b>2,500+</b><span data-t="pl.phr"></span></div></div>
+      <div class="dc-pt"><img id="plIntImg" alt=""><div><b id="plInt"></b><span data-t="pl.int"></span></div></div>
+      <div class="dc-pt"><img class="flag" id="plFlag" alt=""><div><b id="plLang"></b><span data-t="pl.lang"></span></div></div>
+    </div>
+  </div>
+  <div class="scr-foot"><button class="dc-btn" data-go="paywall" data-t="pl.cta"></button></div>
+</section>
+
+<!-- PAYWALL -->
+<section class="scr scr--pay" data-id="paywall">
+  <div class="dc-paybg"></div>
+  <button class="dc-x" id="payClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="scr-top">
+    <img class="dc-paym" src="img/mammoth.svg" alt="">
+    <h2 class="dc-payh" id="payH"></h2>
+    <span class="dc-pchip"><img id="payFlag" alt=""><span id="payChip"></span></span>
+  </div>
+  <div class="scr-body">
+    <svg class="dc-curve" id="curve" viewBox="0 0 390 122"></svg>
+    <div class="dc-proof">
+      <div class="dc-lau"><img src="img/laurel.png" alt=""><div><b>4.7</b><span data-t="pw.avg"></span></div><img class="r" src="img/laurel.png" alt=""></div>
+      <div class="dc-lau"><img src="img/laurel.png" alt=""><div><div class="st">★★★★★</div><span data-t="pw.users"></span></div><img class="r" src="img/laurel.png" alt=""></div>
+    </div>
+    <div class="dc-cmp">
+      <div class="dc-cr h"><h4 data-t="pw.cmpH"></h4><span class="f" data-t="pw.free"></span><span class="p">Premium</span></div>
+      <div class="dc-cr"><span data-t="pw.c1"></span><span class="f">20</span><span class="p" data-t="pw.unl"></span></div>
+      <div class="dc-cr"><span data-t="pw.c2"></span><span class="f">2</span><span class="p" data-t="pw.all"></span></div>
+      <div class="dc-cr"><span data-t="pw.c3"></span><span class="f">—</span><span class="p"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+    </div>
+    <div class="dc-quote">
+      <img src="img/faces.png" alt="Faces of DuoCards learners">
+      <p>This is the first app that <em>truly works</em> for learning a language!</p>
+      <small>SUSAN O'NEIL</small>
+    </div>
+
+  </div>
+  <div class="scr-foot">
+    <div class="dc-plan">
+      <span class="dc-ptag" data-t="pw.tag"></span>
+      <span class="dc-pck"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <span class="n" data-t="pw.year"></span>
+      <span class="pr"><b data-t="pw.pm"></b><span data-t="pw.py"></span></span>
+    </div>
+    <button class="dc-btn" id="payCta" data-t="pw.cta"></button>
+    <p class="dc-terms" data-t="pw.terms"></p>
+  </div>
+</section>
+
+<!-- OFFER ON CLOSE -->
+<section class="scr scr--offer sheet" data-id="offer">
+  <button class="dc-x" id="offClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="scr-top">
+    <img class="dc-paym" src="img/mammoth.svg" alt="">
+    <h2 class="dc-oh" data-t="of.h"></h2>
+    <p class="dc-osub" id="offSub"></p>
+  </div>
+  <div class="scr-body">
+    <p class="dc-olab" data-t="of.lab"></p>
+    <div class="dc-ben"><img src="img/ben-1.png" alt=""><div><b data-t="of.b1"></b><span data-t="of.b1s"></span></div></div>
+    <div class="dc-ben"><img src="img/ben-2.png" alt=""><div><b data-t="of.b2"></b><span data-t="of.b2s"></span></div></div>
+    <div class="dc-ben"><img src="img/ben-3.png" alt=""><div><b data-t="of.b3"></b><span data-t="of.b3s"></span></div></div>
+  </div>
+  <div class="scr-foot">
+    <div class="dc-plan q">
+      <span class="dc-ptag" data-t="of.tag"></span>
+      <span class="dc-pck"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <span class="n" data-t="of.plan"></span>
+      <span class="pr"><span class="tbd" data-t="of.price"></span></span>
+    </div>
+    <button class="dc-btn" id="offerCta" data-t="of.cta" style="margin-top:12px;height:50px;border-radius:25px;font-size:14.5px"></button>
+    <p class="dc-terms" data-t="of.terms"></p>
+  </div>
+</section>
+
+        </div>
+      </div>
+    </div>
+    <div class="demo-cap hidden" id="demoCap"><div class="bar"><i id="demoProg"></i></div><p id="demoTxt"></p><button id="demoStop">Stop</button></div>
+    <div class="chips" id="chips"></div>
+    <p class="chiphint">Jump to any screen — answers already filled in.</p>
+    <div class="qr"><img src="img/qr.svg?v=1" alt="QR code for this prototype"><span><b>Open it on your phone</b>Scan to try the flow in your hand.</span></div>
+  </div>
+  <div class="panelcol"><div class="pn" id="panel"></div></div>
+</div>
+</div><!-- /view-proto -->
+
+<script>
+/* ================= copy, per language (phone screens only) ================= */
+var LANGS = ['en','cs','de'];
+var T = {
+ 'cont':    ["Continue","Pokračovat","Weiter"],
+ 'wel.tag': ["Effective vocabulary learning","Efektivní učení slovíček","Effektiv Vokabeln lernen"],
+ 'wel.acc': ["I already have an account","Už mám účet","Ich habe schon ein Konto"],
+ 'lang.q':  ["What <b>language</b> do you speak?","Jakým <b>jazykem</b> mluvíte?","Welche <b>Sprache</b> sprichst du?"],
+ 'lang.learn':["Language you want to learn","Jazyk, který se chcete učit","Sprache, die du lernen willst"],
+ 'lang.native':["Your native Language","Váš rodný jazyk","Deine Muttersprache"],
+ 'lvl.q':   ["What's your current <b>level</b>?","Jaká je vaše současná <b>úroveň</b>?","Wie ist dein aktuelles <b>Niveau</b>?"],
+ 'pace.q':  ["How hard do you want to study?","Jak intenzivně se chcete učit?","Wie intensiv willst du lernen?"],
+ 'int.q':   ["What are <b>your interests</b>? Choose one or more.","Co <b>vás zajímá</b>? Vyberte jedno nebo víc.","Was sind <b>deine Interessen</b>? Wähle eins oder mehr."],
+ 'st.bub':  ["<b>Great!</b> Now let's see where you stand...","<b>Skvělé!</b> Teď se podíváme, kde jste...","<b>Super!</b> Jetzt schauen wir, wo du stehst..."],
+ 'ec.pair': ["Learning <b>{a}</b> from {b}","<b>{a}</b> · rodný jazyk: {b}","Du lernst <b>{a}</b> · Muttersprache: {b}"],
+ 'ec.lvl':  ["<b>{l}</b> · starting at {c}","<b>{l}</b> · start na úrovni {c}","<b>{l}</b> · Start bei {c}"],
+ 'ec.int':  ["Cards about <b>{x}</b>","Karty o tématech <b>{x}</b>","Karten zu <b>{x}</b>"],
+ 'and':     [" and "," a "," und "],
+ 'an.q':    ["<b>Let's analyze your knowledge</b> first to uncover your potential!","<b>Pojďme analyzovat vaše znalosti</b> a odhalit váš potenciál!","<b>Lass uns dein Wissen analysieren</b> und dein Potenzial entdecken!"],
+ 'an.start':["Start free analysis","Spustit analýzu zdarma","Kostenlose Analyse starten"],
+ 'an.mic':  ["<b>Your 2-minute speaking check</b> opens with your first lesson.","<b>Dvouminutový test mluvení</b> přijde s první lekcí.","<b>Dein 2-Minuten-Sprechtest</b> kommt mit der ersten Lektion."],
+ 'in5':     ["In 5 months using DuoCards","Za 5 měsíců s DuoCards","In 5 Monaten mit DuoCards"],
+ 'sk.p':    ["Pronunciation","Výslovnost","Aussprache"],
+ 'sk.g':    ["Grammar","Gramatika","Grammatik"],
+ 'sk.v':    ["Vocabulary","Slovní zásoba","Wortschatz"],
+ 'pl.q':    ["Now let's create a <b>custom learning plan</b> for you!","Teď vám vytvoříme <b>studijní plán na míru</b>!","Jetzt erstellen wir deinen <b>persönlichen Lernplan</b>!"],
+ 'pl.mat':  ["Free materials","Materiály zdarma","Gratis-Materialien"],
+ 'pl.phr':  ["Phrases","Fráze","Phrasen"],
+ 'pl.int':  ["Interests","Zájmy","Interessen"],
+ 'pl.lang': ["Language","Jazyk","Sprache"],
+ 'pl.cta':  ["Create custom plan","Vytvořit plán na míru","Lernplan erstellen"],
+ 'pw.h':    ["Unlock your path from {a} to {b}","Odemkněte si cestu z {a} na {b}","Schalte deinen Weg von {a} zu {b} frei"],
+ 'pw.chip': ["{l} · Your personalized study plan is ready","{l} · Váš studijní plán je připraven","{l} · Dein persönlicher Lernplan ist fertig"],
+ 'pw.before':["BEFORE DUOCARDS","PŘED DUOCARDS","VOR DUOCARDS"],
+ 'pw.after':["AFTER DUOCARDS","S DUOCARDS","MIT DUOCARDS"],
+ 'pw.avg':  ["Average rating","Průměrné hodnocení","Durchschnitt"],
+ 'pw.users':["6 million users","6 milionů uživatelů","6 Millionen Nutzer"],
+ 'pw.cmpH': ["What Premium unlocks","Co odemkne Premium","Was Premium freischaltet"],
+ 'pw.free': ["Free","Zdarma","Gratis"],
+ 'pw.c1':   ["New cards a day","Nové karty denně","Neue Karten pro Tag"],
+ 'pw.c2':   ["Languages","Jazyky","Sprachen"],
+ 'pw.c3':   ["Offline learning","Učení offline","Offline lernen"],
+ 'pw.unl':  ["Unlimited","Bez limitu","Unbegrenzt"],
+ 'pw.all':  ["All 100+","Všech 100+","Alle 100+"],
+ 'pw.tag':  ["7 days free","7 dní zdarma","7 Tage gratis"],
+ 'pw.year': ["Yearly","Ročně","Jährlich"],
+ 'pw.pm':   ["6,66 € / month","6,66 € / měsíc","6,66 € / Monat"],
+ 'pw.py':   ["79,99 € / year","79,99 € / rok","79,99 € / Jahr"],
+ 'pw.cta':  ["Try for €0.00","Vyzkoušet za 0,00 €","Für 0,00 € testen"],
+ 'pw.terms':["7 days free, then 79,99 € / 1 Year","7 dní zdarma, pak 79,99 € / 1 rok","7 Tage gratis, dann 79,99 € / 1 Jahr"],
+ 'of.h':    ["Not ready for a full year?","Nechcete se vázat na celý rok?","Noch nicht bereit für ein ganzes Jahr?"],
+ 'of.sub':  ["Start your path to {b} with 3 months of Premium. No trial, no yearly plan.","Začněte cestu na {b} se 3 měsíci Premium. Bez zkušební doby, bez ročního plánu.","Starte deinen Weg zu {b} mit 3 Monaten Premium. Ohne Testphase, ohne Jahresabo."],
+ 'of.lab':  ["What you will achieve in the first three months","Co zvládnete za první tři měsíce","Was du in den ersten drei Monaten erreichst"],
+ 'of.b1':   ["You will gain more confidence","Získáte větší jistotu","Du wirst sicherer"],
+ 'of.b1s':  ["Stress-free practice in speaking, reading, and listening","Procvičování mluvení, čtení a poslechu bez stresu","Stressfreies Üben von Sprechen, Lesen und Hören"],
+ 'of.b2':   ["Expanded vocabulary","Bohatší slovní zásoba","Größerer Wortschatz"],
+ 'of.b2s':  ["Common words and practical phrases","Běžná slova a praktické fráze","Häufige Wörter und praktische Phrasen"],
+ 'of.b3':   ["Develop a new learning habit","Nový studijní návyk","Eine neue Lerngewohnheit"],
+ 'of.b3s':  ["Smart reminders, fun challenges, and more","Chytrá připomenutí, zábavné výzvy a další","Smarte Erinnerungen, lustige Challenges und mehr"],
+ 'of.tag':  ["No trial · no yearly plan","Bez zkušební doby","Ohne Testphase"],
+ 'of.plan': ["3 months","3 měsíce","3 Monate"],
+ 'of.price':["Your 3-month price","Vaše cena za 3 měsíce","Dein 3-Monats-Preis"],
+ 'of.cta':  ["Get 3 months","Získat 3 měsíce","3 Monate holen"],
+ 'of.terms':["Renews every 3 months. Cancel anytime in Settings.","Obnovuje se každé 3 měsíce. Zrušit lze kdykoli.","Verlängert sich alle 3 Monate. Jederzeit kündbar."]
+};
+var LNAMES = {
+  en:['English','angličtina','Englisch'], es:['Spanish','španělština','Spanisch'], de:['German','němčina','Deutsch'],
+  fr:['French','francouzština','Französisch'], it:['Italian','italština','Italienisch'],
+  sr:['Serbian','srbština','Serbisch'], cs:['Czech','čeština','Tschechisch'], uk:['Ukrainian','ukrajinština','Ukrainisch']
+};
+var LEARN = ['en','es','de','fr','it'];
+var NATIVE = ['sr','cs','de','uk','es','it'];
+var LEVELS = [
+  {k:'zero', s:0, b:1, c:'A0', l:['Starting from zero','Začínám od nuly','Ich fange bei null an']},
+  {k:'basic',s:1, b:2, c:'A',  l:['Basic knowledge','Základní znalosti','Grundkenntnisse']},
+  {k:'conv', s:3, b:3, c:'B',  l:['Conversational level','Konverzační úroveň','Konversationsniveau']},
+  {k:'pro',  s:5, b:4, c:'C',  l:['Professional fluency','Profesionální plynulost','Fließend, beruflich']}
+];
+var CEFR = ['A0','A1','A2','B1','B2','C1','C2'];
+var CNAME = [['Beginner','Začátečník','Anfänger'],['Beginner','Začátečník','Anfänger'],['Elementary','Mírně pokročilý','Grundstufe'],
+  ['Intermediate','Středně pokročilý','Mittelstufe'],['Upper intermediate','Pokročilý','Obere Mittelstufe'],['Advanced','Velmi pokročilý','Fortgeschritten'],['Proficient','Expert','Experte']];
+var PACE = [
+  {k:'unsure', i:'off',  t:['Not sure','Nevím','Weiß nicht'], s:['Ask me later','Zeptej se později','Frag mich später'], e:['Reminders: ask me later','Připomenutí: zeptat se později','Erinnerungen: später fragen']},
+  {k:'little', i:'bell', t:['Not much','Málo','Wenig'], s:['Notify me after 2 days of inactivity','Upozorni mě po 2 dnech neaktivity','Erinnere mich nach 2 Tagen Pause'], e:['Reminder after 2 days off','Připomenutí po 2 dnech pauzy','Erinnerung nach 2 Tagen Pause']},
+  {k:'regular',i:'ring', t:['Regularly','Pravidelně','Regelmäßig'], s:['Notify me after 1 day of inactivity','Upozorni mě po 1 dni neaktivity','Erinnere mich nach 1 Tag Pause'], e:['Reminder after 1 day off','Připomenutí po 1 dni pauzy','Erinnerung nach 1 Tag Pause']},
+  {k:'hard',   i:'alarm',t:['Very hard','Hodně','Sehr intensiv'], s:['Notify me after 4 hours if there are cards to learn.','Upozorni mě po 4 hodinách, pokud mám karty k učení.','Erinnere mich nach 4 Stunden, wenn Karten anstehen.'], e:['Reminder every 4 hours when cards are due','Připomenutí po 4 hodinách, když čekají karty','Erinnerung alle 4 Stunden, wenn Karten anstehen']}
+];
+var INTERESTS = [
+  {k:'education',l:['Education','Vzdělání','Bildung']},{k:'travel',l:['Travel','Cestování','Reisen']},
+  {k:'arts',l:['Arts','Umění','Kunst']},{k:'books',l:['Books','Knihy','Bücher']},
+  {k:'business',l:['Business','Byznys','Business']},{k:'career',l:['Career','Kariéra','Karriere']},
+  {k:'cooking',l:['Cooking','Vaření','Kochen']},{k:'food',l:['Food','Jídlo','Essen']},
+  {k:'mindfulness',l:['Mindfulness','Všímavost','Achtsamkeit']},{k:'movies',l:['Movies','Filmy','Filme']}
+];
+var INT = {}; INTERESTS.forEach(function(o){ INT[o.k]=o; });
+var NATIVE_FOR = {en:'sr', cs:'cs', de:'de'};
+var BELL = {
+  off:'<path d="M9.5 19a2.5 2.5 0 0 0 5 0"/><path d="M6.5 8.5A5.5 5.5 0 0 1 16.8 6M18 11v3l2 2.5H6"/><path d="M4 4l16 16"/>',
+  bell:'<path d="M9.5 19a2.5 2.5 0 0 0 5 0"/><path d="M6 16.5 4.5 18h15L18 16.5V11a6 6 0 0 0-12 0z"/>',
+  ring:'<path d="M9.5 19a2.5 2.5 0 0 0 5 0"/><path d="M6 16.5 4.5 18h15L18 16.5V11a6 6 0 0 0-12 0z" fill="currentColor"/>',
+  alarm:'<path d="M9.5 19a2.5 2.5 0 0 0 5 0"/><path d="M6 16.5 4.5 18h15L18 16.5V11a6 6 0 0 0-12 0z" fill="currentColor"/><path d="M12 8v4M12 14.2v.3" stroke="#fff"/>'
+};
+
+/* ================= state ================= */
+function defaults(){ return { lang:S0.lang, theme:S0.theme, learn:'en', native:NATIVE_FOR[S0.lang], level:'basic', pace:'regular',
+  interests:['arts','career'], analysed:false }; }
+var S0 = {lang:'en', theme:'light'};
+var S = defaults();
+function L(){ return LANGS.indexOf(S.lang); }
+function t(k,v){ var s=(T[k]||[k])[L()]; if(v) Object.keys(v).forEach(function(x){ s=s.split('{'+x+'}').join(v[x]); }); return s; }
+function joinL(a){ return a.length<2 ? (a[0]||'') : a.slice(0,-1).join(', ')+t('and')+a[a.length-1]; }
+function lv(){ return LEVELS.filter(function(x){ return x.k===S.level; })[0]; }
+function path(){ var s=lv().s; return {a:s, m:Math.min(6,s+1), b:Math.min(6,s+2)}; }
+function flag(c){ return 'img/flag-'+c+'.svg'; }
+function lname(c){ return LNAMES[c][L()]; }
+function Cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function ints(){ return INTERESTS.filter(function(o){ return S.interests.indexOf(o.k)>-1; }); }
+
+/* ================= builders (re-run on language change) ================= */
+function buildSelects(){
+  var ls=document.getElementById('learnSel'), ns=document.getElementById('nativeSel');
+  ls.innerHTML=LEARN.map(function(c){ return '<option value="'+c+'">'+Cap(lname(c))+'</option>'; }).join('');
+  ns.innerHTML=NATIVE.map(function(c){ return '<option value="'+c+'">'+Cap(lname(c))+'</option>'; }).join('');
+}
+function buildLevels(){ var g=document.getElementById('levelList'); g.innerHTML='';
+  LEVELS.forEach(function(o){ var b=document.createElement('button'); b.className='dc-row'; b.dataset.v=o.k;
+    var bars=''; for(var i=1;i<=4;i++) bars+='<i'+(i<=o.b?' class="f"':'')+'></i>';
+    b.innerHTML='<span class="dc-bars">'+bars+'</span><span class="l">'+o.l[L()]+'</span><span class="k">'+o.c+'</span>';
+    b.addEventListener('click',function(){ S.level=o.k; S.analysed=false; syncScreen(); });
+    g.appendChild(b); }); }
+function buildPace(){ var g=document.getElementById('paceList'); g.innerHTML='';
+  PACE.forEach(function(o){ var b=document.createElement('button'); b.className='dc-row'; b.dataset.v=o.k;
+    b.innerHTML='<svg class="bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+BELL[o.i]+'</svg><span class="t2"><b>'+o.t[L()]+'</b><small>'+o.s[L()]+'</small></span>';
+    b.addEventListener('click',function(){ S.pace=o.k; syncScreen(); });
+    g.appendChild(b); }); }
+function buildInterests(){ var g=document.getElementById('intGrid'); g.innerHTML='';
+  INTERESTS.forEach(function(o){ var b=document.createElement('button'); b.className='dc-tile'; b.dataset.v=o.k;
+    b.innerHTML='<img src="img/i-'+o.k+'.png" alt="">'+o.l[L()];
+    b.addEventListener('click',function(){ var i=S.interests.indexOf(o.k); if(i>-1) S.interests.splice(i,1); else S.interests.push(o.k); syncScreen(); });
+    g.appendChild(b); }); }
+function applyStatic(){
+  document.documentElement.lang=S.lang;
+  document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent=t(el.dataset.t); });
+  document.querySelectorAll('[data-th]').forEach(function(el){ el.innerHTML=t(el.dataset.th); });
+  buildSelects(); buildLevels(); buildPace(); buildInterests();
+}
+
+/* ================= the paywall curve reads the path ================= */
+function drawCurve(){
+  var p=path(), dark=S.theme==='dark';
+  var pts=[[62,104],[160,74],[262,48]];
+  var h='<defs><linearGradient id="cvG" x1="0" x2="1"><stop offset="0" stop-color="#0A93D9"/><stop offset=".6" stop-color="#1FA77A"/><stop offset="1" stop-color="#2FA84F"/></linearGradient></defs>'
+   + '<path d="M0 113 C30 111 45 106 62 104 S130 85 160 74 S230 54 262 48 S350 24 390 4" fill="none" stroke="url(#cvG)" stroke-width="3.2"/>';
+  var lv=[p.a,p.m,p.b];
+  pts.forEach(function(q,i){
+    var g=i===2, col=g?'#2FA84F':'#0A93D9', ring=g?'#2FA84F':'#A9D6F5', r=i===0?9:6;
+    h+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="'+r+'" fill="'+(dark?'#1D2126':'#fff')+'" stroke="'+col+'" stroke-width="'+(i===0?3.4:2.8)+'"/>';
+    h+='<circle class="lbl" cx="'+q[0]+'" cy="'+(q[1]-33)+'" r="15" fill="#fff" stroke="'+ring+'" stroke-width="2.4"/>'
+     + '<text x="'+q[0]+'" y="'+(q[1]-28.8)+'" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+col+'">'+CEFR[lv[i]]+'</text>';
+  });
+  h+='<text x="78" y="119" font-size="9.5" font-weight="700" fill="#0A93D9" letter-spacing=".3">'+t('pw.before')+'</text>';
+  h+='<text x="272" y="66" font-size="9.5" font-weight="700" fill="#2FA84F" letter-spacing=".3">'+t('pw.after')+'</text>';
+  document.getElementById('curve').innerHTML=h;
+}
+
+/* ================= everything downstream reads S ================= */
+var echoTimers=[];
+function syncScreen(){
+  var li=L(), p=path(), lvl=lv();
+  document.getElementById('uiFlag').src=flag(S.lang==='en'?'en':S.lang);
+  document.getElementById('uiLang').textContent=['English','Čeština','Deutsch'][li];
+  document.getElementById('learnSel').value=S.learn; document.getElementById('nativeSel').value=S.native;
+  document.getElementById('learnFlag').src=flag(S.learn); document.getElementById('learnName').textContent=Cap(lname(S.learn));
+  document.getElementById('nativeFlag').src=flag(S.native); document.getElementById('nativeName').textContent=Cap(lname(S.native));
+  document.getElementById('levelQ').innerHTML=t('lvl.q')+' <img src="'+flag(S.learn)+'" alt="" style="width:16px;height:11px;border-radius:2px;vertical-align:-1px">';
+  document.querySelectorAll('#levelList .dc-row').forEach(function(b){ b.classList.toggle('on', b.dataset.v===S.level); });
+  document.querySelectorAll('#paceList .dc-row').forEach(function(b){ b.classList.toggle('on', b.dataset.v===S.pace); });
+  document.querySelectorAll('#intGrid .dc-tile').forEach(function(b){ b.classList.toggle('on', S.interests.indexOf(b.dataset.v)>-1); });
+  document.getElementById('intBtn').disabled=!S.interests.length;
+
+  /* where you stand: the answers, read back */
+  var il=ints(), names=il.map(function(o){ return o.l[li]; }), pc=PACE.filter(function(x){ return x.k===S.pace; })[0];
+  document.getElementById('ecFlag').src=flag(S.learn);
+  document.getElementById('ec0').innerHTML=t('ec.pair',{a:Cap(lname(S.learn)),b:Cap(lname(S.native))});
+  document.getElementById('ec1').innerHTML=t('ec.lvl',{l:lvl.l[li],c:CEFR[p.a]});
+  document.getElementById('ecInt').src='img/i-'+(il[0]?il[0].k:'education')+'.png';
+  document.getElementById('ec2').innerHTML=t('ec.int',{x:joinL(names)});
+  document.getElementById('ec3').innerHTML='<b>'+pc.e[li]+'</b>';
+
+  /* analysis: their card, start level → the target */
+  var A=scr.analysis, done=S.analysed, shown=done?p.b:p.a;
+  A.classList.toggle('done',done);
+  document.getElementById('anBadge').textContent=CEFR[shown];
+  document.getElementById('anName').textContent=CNAME[shown][li];
+  document.querySelectorAll('#anCells i').forEach(function(c,i){
+    c.classList.toggle('cur', i<=p.a && !(done && i>p.a));
+    c.classList.toggle('tgt', done && i>p.a && i<=p.b); });
+  document.getElementById('anBtn').textContent = done ? t('cont') : t('an.start');
+
+  /* plan tiles */
+  document.getElementById('plIntImg').src='img/i-'+(il[0]?il[0].k:'education')+'.png';
+  document.getElementById('plInt').textContent=names.length>2 ? names.slice(0,2).join(', ')+', …' : names.join(', ');
+  document.getElementById('plFlag').src=flag(S.learn);
+  document.getElementById('plLang').textContent=Cap(lname(S.learn));
+
+  /* paywall + offer */
+  document.getElementById('payH').textContent=t('pw.h',{a:CEFR[p.a],b:CEFR[p.b]});
+  document.getElementById('payFlag').src=flag(S.learn);
+  document.getElementById('payChip').textContent=t('pw.chip',{l:Cap(lname(S.learn))});
+  document.getElementById('offSub').textContent=t('of.sub',{b:CEFR[p.b]});
+  drawCurve();
+}
+
+/* ================= router ================= */
+var ORDER=['welcome','langs','level','pace','interests','stand','analysis','plan','paywall','offer'];
+var LABEL={welcome:'Welcome',langs:'Languages',level:'Level',pace:'Study pace',interests:'Interests',stand:'Your answers',analysis:'Analysis',plan:'Custom plan',paywall:'Paywall',offer:'Offer on close'};
+var scr={}, hist=[], cur='welcome';
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id]=s; });
+
+function chrome(){ var dark=S.theme==='dark';
+  document.getElementById('sbar').classList.toggle('light',dark); document.getElementById('homebar').classList.toggle('light',dark); }
+function clearEcho(){ echoTimers.forEach(clearTimeout); echoTimers=[]; }
+function runEcho(){
+  var k=demo.on?0.6:1, els=document.querySelectorAll('#echo .dc-el');
+  els.forEach(function(e){ e.classList.remove('on'); });
+  els.forEach(function(e,i){ echoTimers.push(setTimeout(function(){ e.classList.add('on'); },(350+i*420)*k)); });
+}
+function enter(id){ chrome(); paintChips(); paintPanel(); clearEcho(); if(id==='stand') runEcho(); }
+function go(id,opts){
+  opts=opts||{}; if(id===cur) return;
+  var from=scr[cur], to=scr[id];
+  if(!opts.back) hist.push(cur);
+  if(from){ from.classList.remove('is-active');
+    if(!to.classList.contains('sheet') && !from.classList.contains('sheet')) from.classList.add('is-past'); }
+  if(to.classList.contains('sheet')) from.classList.add('is-active');
+  Object.keys(scr).forEach(function(k){ if(k!==id&&k!==cur) scr[k].classList.remove('is-active'); });
+  to.classList.remove('is-past'); to.classList.add('is-active');
+  cur=id; enter(id);
+}
+function jump(id){
+  var i=ORDER.indexOf(id);
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active','is-past'); });
+  hist=ORDER.slice(0,i<0?0:i);
+  if(id==='offer') scr.paywall.classList.add('is-active');
+  if(i>ORDER.indexOf('analysis')) S.analysed=true;
+  scr[id].classList.add('is-active'); cur=id;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+  syncScreen(); enter(id);
+}
+var chipKey='';
+function paintChips(){
+  var c=document.getElementById('chips');
+  if(!chipKey){ chipKey='1'; c.innerHTML='';
+    ORDER.forEach(function(id){
+      var b=document.createElement('button'); b.className='chip'+(id==='offer'?' offer':''); b.textContent=LABEL[id];
+      b.dataset.id=id; b.onclick=function(){ stopDemo(); jump(id); }; c.appendChild(b);
+    });
+  }
+  c.querySelectorAll('.chip').forEach(function(b){ b.classList.toggle('on', b.dataset.id===cur); });
+}
+
+/* ================= wiring ================= */
+document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ if(!b.disabled) go(b.dataset.go); }); });
+document.getElementById('learnSel').addEventListener('change',function(e){ S.learn=e.target.value; syncScreen(); });
+document.getElementById('nativeSel').addEventListener('change',function(e){ S.native=e.target.value; syncScreen(); });
+document.getElementById('anBtn').addEventListener('click',function(){
+  if(!S.analysed){ S.analysed=true; syncScreen(); } else go('plan'); });
+document.getElementById('payClose').addEventListener('click',function(){ go('offer'); });
+document.getElementById('offClose').addEventListener('click',function(){ jump('welcome'); });
+document.getElementById('payCta').addEventListener('click',function(){ jump('welcome'); });
+document.getElementById('offerCta').addEventListener('click',function(){ jump('welcome'); });
+
+function setSeg(id,attr,val){ document.querySelectorAll('#'+id+' button').forEach(function(b){ b.classList.toggle('on', b.dataset[attr]===val); }); }
+function setLang(l){
+  var wasDefault = S.native===NATIVE_FOR[S.lang];
+  S.lang=l; S0.lang=l; if(wasDefault) S.native=NATIVE_FOR[l];
+  setSeg('segLang','lang',l); applyStatic(); syncScreen(); paintPanel();
+}
+function setTheme(th){ S.theme=th; S0.theme=th; document.getElementById('phoneIn').classList.toggle('dark',th==='dark'); setSeg('segTheme','theme',th); chrome(); drawCurve(); }
+document.querySelectorAll('#segLang button').forEach(function(b){ b.addEventListener('click',function(){ stopDemo(); setLang(b.dataset.lang); }); });
+document.querySelectorAll('#segTheme button').forEach(function(b){ b.addEventListener('click',function(){ setTheme(b.dataset.theme); }); });
+
+/* ================= the 30-second walkthrough ================= */
+var demo={tok:0,on:false,t0:0,iv:null}, finger=document.getElementById('finger'), phoneIn=document.getElementById('phoneIn');
+function W(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function cap(txt){ document.getElementById('demoTxt').textContent=txt; }
+async function tap(sel,tok){
+  if(demo.tok!==tok) throw 0;
+  var el=document.querySelector(sel); if(!el) return;
+  var r=el.getBoundingClientRect(), p=phoneIn.getBoundingClientRect(), z=p.width/phoneIn.offsetWidth||1;
+  finger.style.left=((r.left-p.left+r.width/2)/z)+'px'; finger.style.top=((r.top-p.top+r.height/2)/z)+'px';
+  finger.classList.add('show'); await W(380); if(demo.tok!==tok) throw 0;
+  finger.classList.add('press'); await W(120); finger.classList.remove('press'); el.click(); await W(160);
+  if(demo.tok!==tok) throw 0;
+}
+async function pause(ms,tok){ await W(ms); if(demo.tok!==tok) throw 0; }
+function startDemo(){
+  stopDemo(); var tok=++demo.tok; demo.on=true; demo.t0=Date.now();
+  var keep={lang:S.lang,theme:S.theme}; S=defaults(); S.lang=keep.lang; S.theme=keep.theme;
+  applyStatic(); jump('welcome');
+  document.getElementById('demoCap').classList.remove('hidden');
+  demo.iv=setInterval(function(){ document.getElementById('demoProg').style.width=Math.min(100,(Date.now()-demo.t0)/290)+'%'; },200);
+  (async function(){
+    try{
+      cap('Your welcome screen, as it ships.'); await pause(1300,tok);
+      await tap('[data-id=welcome] .dc-btn',tok);
+      cap('Your questions, all kept: the language pair first.'); await pause(900,tok);
+      await tap('[data-id=langs] .dc-btn',tok);
+      cap('Their level. Say they already hold a conversation.'); await pause(500,tok);
+      await tap('#levelList [data-v=conv]',tok); await pause(450,tok); await tap('[data-id=level] .dc-btn',tok);
+      cap('How hard they want to study — it sets their reminders.'); await pause(500,tok);
+      await tap('#paceList [data-v=hard]',tok); await pause(400,tok); await tap('[data-id=pace] .dc-btn',tok);
+      cap('Interests, on your own tiles. Add Travel.'); await pause(450,tok);
+      await tap('#intGrid [data-v=travel]',tok); await pause(400,tok); await tap('#intBtn',tok);
+      cap('Idea 4: every answer is read back before the analysis.'); await pause(2300,tok);
+      await tap('[data-id=stand] .dc-btn',tok);
+      cap('Idea 3: the path shows now; the speaking test waits for lesson one.'); await pause(700,tok);
+      await tap('#anBtn',tok); await pause(1500,tok); await tap('#anBtn',tok);
+      cap('Your custom plan, with their interests and language.'); await pause(1300,tok);
+      await tap('[data-id=plan] .dc-btn',tok);
+      cap('Ideas 2 and 5: the paywall names B1 → C1, shows what Premium unlocks and carries Susan’s quote.'); await pause(1200,tok);
+      var pb=scr.paywall.querySelector('.scr-body'); pb.scrollTo({top:pb.scrollHeight,behavior:'smooth'}); await pause(1700,tok);
+      pb.scrollTo({top:0,behavior:'smooth'}); await pause(500,tok);
+      cap('Idea 1: they close it, and your 3-month plan catches them.'); await tap('#payClose',tok); await pause(2000,tok);
+      cap('That is the flow — your design, a new order, a second chance on close.');
+      finger.classList.remove('show'); await pause(2200,tok); stopDemo();
+    }catch(e){}
+  })();
+}
+function stopDemo(){ if(!demo.on) return; demo.tok++; demo.on=false; clearInterval(demo.iv); finger.classList.remove('show','press');
+  document.getElementById('demoCap').classList.add('hidden'); }
+document.getElementById('demoBtn').addEventListener('click',startDemo);
+document.getElementById('demoStop').addEventListener('click',stopDemo);
+phoneIn.addEventListener('pointerdown',function(e){ if(e.isTrusted && demo.on) stopDemo(); });
+</script>
+<script>
+/* ---- the short panel: hypothesis + potential outcome, nothing else ---- */
+var PANEL = {
+welcome:{ctx:true,t:'Welcome',
+ kept:'Untouched — the language picker, the DuoCards wordmark, the mammoth with raised hands, the pager dots and both buttons.'},
+langs:{ctx:true,t:'What language do you speak?',
+ kept:'Untouched — the mammoth and its speech bubble, the outlined progress bar and the two flag pickers. Both answers are carried into every screen that follows.'},
+level:{ctx:true,t:'What’s your current level?',
+ kept:'Untouched — your signal-bar icons, A0 / A / B / C on the right and the blue selected state. The answer now sets the start of the path on the analysis and the paywall: try Conversational and the paywall says B1 to C1.'},
+pace:{ctx:true,t:'How hard do you want to study?',
+ kept:'Untouched — all four bell options with your reminder wording. The choice is now read back on “Your answers”.'},
+interests:{ctx:true,t:'What are your interests?',
+ kept:'Untouched — your illustrated tiles, multi-select and blue outline. Your testimonial screen and the student-or-teacher question stay in your flow exactly where they are; they are left out here only to keep the prototype short.'},
+stand:{n:4,t:'Read their answers back before the analysis',
+ hyp:'Try ticking off the language pair, level, interests and reminder choice on this screen, <b>because after six questions “Great! Now let’s see where you stand…” repeats none of them</b>. Every line comes from an answer, so change one and this screen changes with it.',
+ kept:'Your speech bubble, the big mammoth and your blue pill button. The list uses your own card style and icons.',
+ out:'CR +10–15%'},
+analysis:{n:3,t:'Move the speaking test past the paywall',
+ hyp:'Try showing the path straight from this card and opening the speaking check in the first lesson, <b>because today “Start free analysis” opens a voice chat with a microphone before anyone has seen a price, and skipping it still lands on the same A1 → B1 path</b>.',
+ kept:'Your analysis card as it ships — the A1 badge, BEGINNER, the A0–C2 bar, the three skills with question marks, the triangle and the green B1 result with “In 5 months using DuoCards”.',
+ out:'CR +10–15%'},
+plan:{ctx:true,t:'Now let’s create a custom learning plan',
+ kept:'Untouched — the green chart, “In 5 months using DuoCards”, 300+ free materials, 2,500+ phrases, their interests and their language. Your Without / With DuoCards screen and the first-three-months screen stay after this one in your flow; the first-three-months content reappears on the offer.'},
+paywall:{n:2,t:'Show what Premium unlocks on the paywall',
+ hyp:'Try a three-row Free vs Premium block under your rating, <b>because the paywall shows a curve and a price but never says what the money buys</b>. Each row is from your own FAQ: 20 new cards a day on free, two languages, offline learning for Premium.',
+ n2:5, out2:'CR +5–10%',
+ hyp2:'Try moving Susan O’Neil’s quote and the faces right above the plan, <b>because your strongest proof sits on the sixth screen, long before the price</b>. Your 4.7 and 6 million users stay where they are.',
+ kept:'Your headline that names their own levels, the flag chip, the before / after curve, the laurels, the 7 DAYS FREE yearly card at 6,66 € a month and 79,99 € a year, and TRY FOR €0.00 — now docked so it never scrolls away.',
+ out:'CR +10–20%'},
+offer:{n:1,t:'Catch the close with your 3-month plan',
+ hyp:'Try showing your 3-month plan when someone closes the paywall, with no trial, <b>because today the X goes straight to “Your custom learning plan is ready” and that person is never asked again</b>. It is a different offer, not a discount: a shorter commitment instead of a free week on a full year.',
+ kept:'The mammoth, your type and pill button, and your own “What you will achieve in the first three months” screen with its three illustrations. The price slot is your 3-month store price, left for you to confirm.',
+ out:'ARPU +10–15%'}
+};
+
+function outBlock(lab,val){
+  return '<div class="pn-out"><div class="lab">'+lab+'</div><div class="v">'+val+'</div></div>';
+}
+function paintPanel(){
+  var d=PANEL[cur]; if(!d) return;
+  var h='';
+  if(d.ctx){
+    h += '<div class="pn-n ctx">Context · no change proposed</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<div class="pn-kept">'+d.kept+'</div>';
+  } else {
+    h += '<div class="pn-n">Idea '+d.n+' of 5</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<p class="pn-hyp">'+d.hyp+'</p>'
+       + outBlock('Potential outcome · based on Adapty data', d.out);
+    if(d.hyp2){
+      h += '<div class="pn-sep"></div>'
+         + '<div class="pn-n">Idea '+d.n2+' of 5</div>'
+         + '<p class="pn-hyp" style="margin-top:12px">'+d.hyp2+'</p>'
+         + outBlock('Potential outcome · based on Adapty data', d.out2);
+    }
+    h += '<div class="pn-kept"><b>Your design, unchanged.</b> '+d.kept+'</div>';
+  }
+  if(S.lang!=='en') h += '<div class="pn-kept"><b>Language.</b> Screens are shown in '+(S.lang==='cs'?'Czech':'German')+' to show one flow serving every market — translated by us. Store prices stay as published in euros; Susan’s quote stays verbatim in English.</div>';
+  h += '<div class="pn-foot">Ranges are Adapty’s expected effect from tests across 30,000+ subscription apps — not measured lift for DuoCards. '
+     + 'Prices, ratings, quotes and feature lines come from your own published material.</div>';
+  document.getElementById('panel').innerHTML = h;
+}
+
+/* ---- views, jumps from the overview ---- */
+function showView(v){
+  if(v!=='proto') stopDemo();
+  document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('view-'+v).classList.add('on');
+  document.querySelectorAll('.nav-links button[data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===v); });
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ showView(b.dataset.view); }); });
+document.querySelectorAll('.idea[data-jump]').forEach(function(b){
+  b.addEventListener('click',function(){ showView('proto'); jump(b.dataset.jump); });
+});
+document.querySelectorAll('[data-demo]').forEach(function(b){ b.addEventListener('click',function(){ showView('proto'); startDemo(); }); });
+
+applyStatic();
+scr.welcome.classList.add('is-active');
+syncScreen(); chrome(); paintChips(); paintPanel();
+if(/[?&]open=proto/.test(location.search)) showView('proto');
+</script>
+</body>
+</html>
